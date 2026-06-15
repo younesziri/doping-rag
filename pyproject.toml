@@ -1,7 +1,7 @@
 [project]
 name = "doping-rag"
 version = "0.1.0"
-description = "Add your description here"
+description = "RAG system over WADA anti-doping regulations, with a versioned evaluation harness"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -20,3 +20,5 @@ dev = [
     "pytest>=9.0.3",
     "ruff>=0.15.17",
 ]
+[tool.ruff]
+line-length = 100
