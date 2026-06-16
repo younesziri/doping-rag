@@ -1,2 +1,4 @@
 qdrant_data/
 .env
+data/raw/*.pdf
+.DS_Store

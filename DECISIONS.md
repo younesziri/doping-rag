@@ -41,3 +41,33 @@ embedding model.
   production setting.
 - **No cloud deployment until week 7.** Local-first keeps iteration fast and
   free during the experimentation phase.
+
+
+===
+## 003 — Corpus inclusion policy (2026-06-16)
+
+**Decision:** The corpus contains only clean-text, English, currently-in-force
+versions of WADA documents, plus the clean future versions (2027) where they
+already exist. Excluded: redline / tracked-changes documents, non-English
+translations, and short "explanatory notes" summaries.
+
+**Reasoning:**
+- *Clean text only.* Redline documents interleave old and new wording with
+  strikethroughs and insertion marks. PyMuPDF extracts that as overlapping,
+  self-contradicting text that would corrupt chunks and degrade retrieval.
+  They are human diff artifacts, not source documents.
+- *In-force + future versions, deliberately.* A real query is answered against
+  the version in force on a given date, so the in-force versions are the
+  baseline. The future versions are included on purpose to create the version
+  axes (2025↔2026 List, 2021↔2027 Code, 2023↔2027 ISTUE) that motivate
+  version-aware retrieval later.
+- *English-only* follows decision 001 and matches WADA's authoritative texts.
+- *Explanatory notes excluded* as supplementary and non-authoritative.
+
+**Tradeoff accepted:** Including two versions of several documents injects
+near-duplicate content into the corpus. This is intentional — it's the
+retrieval difficulty I want — but it forces a hard requirement: every chunk
+must carry a `version` (year) field in its Qdrant payload from day one, or
+retrieval will conflate years and return the wrong edition. I also forgo the
+redlines as a potential source of structured version-diff metadata, which
+could be reintroduced later as a stretch feature.

@@ -1,0 +1,98 @@
+{
+    "corpus_version": "v0",
+    "description": "Core WADA anti-doping corpus: in-force baseline plus staged future versions for the versioning experiments.",
+    "publisher": "World Anti-Doping Agency (WADA)",
+    "retrieved_on": "2026-06-16",
+    "documents": [
+      {
+        "filename": "wada-code-2021-en.pdf",
+        "title": "World Anti-Doping Code 2021",
+        "version": "2021",
+        "language": "en",
+        "status": "in_force",
+        "url": "https://www.wada-ama.org/sites/default/files/resources/files/2021_wada_code.pdf",
+        "downloaded": "2026-06-16",
+        "sha256": "958dcda3ee459696b66dabbd07fddf111723a528ada1689c0a7890cb190506ca"
+      },
+      {
+        "filename": "wada-code-2027-en.pdf",
+        "title": "World Anti-Doping Code 2027 (in force 1 January 2027)",
+        "version": "2027",
+        "language": "en",
+        "status": "future",
+        "url": "https://www.wada-ama.org/sites/default/files/2026-05/2027_world_anti-doping_code_code_may_2026.pdf",
+        "downloaded": "2026-06-16",
+        "sha256": "029a6ac0bb0cb5c0173e4f04ef359b73b48d47b401a32405ad77b40ae33027bf"
+      },
+      {
+        "filename": "wada-prohibited-list-2026-en.pdf",
+        "title": "Prohibited List 2026",
+        "version": "2026",
+        "language": "en",
+        "status": "in_force",
+        "url": "https://www.wada-ama.org/sites/default/files/2025-09/2026list_en_final_clean_september_2025.pdf",
+        "downloaded": "2026-06-16",
+        "sha256": "f0b3fcb0dc48477868983eaddac08c132b5c079d941eaa8d40aa6ff9064ece5a"
+      },
+      {
+        "filename": "wada-prohibited-list-2025-en.pdf",
+        "title": "Prohibited List 2025",
+        "version": "2025",
+        "language": "en",
+        "status": "superseded",
+        "url": "https://www.wada-ama.org/sites/default/files/2024-09/2025list_en_final_clean_12_september_2024.pdf",
+        "downloaded": "2026-06-16",
+        "sha256": "317c3fdcd06ff7a9fa11687cf619ebed845b5815c4d82c87d01d0ee0a17d87b2"
+      },
+      {
+        "filename": "wada-istue-2023-en.pdf",
+        "title": "International Standard for Therapeutic Use Exemptions (ISTUE) 2023",
+        "version": "2023",
+        "language": "en",
+        "status": "in_force",
+        "url": "https://www.wada-ama.org/sites/default/files/2022-09/international_standard_for_therapeutic_use_exemptions_istue_2023.pdf",
+        "downloaded": "2026-06-16",
+        "sha256": "4b3d6e74bb5de64c7cea1b53c149a6a9d9897108560dd493d13d1609f8883852"
+      },
+      {
+        "filename": "wada-istue-2027-en.pdf",
+        "title": "International Standard for Therapeutic Use Exemptions (ISTUE) 2027 (in force 1 January 2027)",
+        "version": "2027",
+        "language": "en",
+        "status": "future",
+        "url": "https://www.wada-ama.org/sites/default/files/2025-12/2027_international_standard_for_therapeutic_use_exemptions_istue.pdf",
+        "downloaded": "2026-06-16",
+        "sha256": "cf25c757c539de2a4cc0870cd4c6167320f86988e12497545a9ae9e8b4f36c37"
+      },
+      {
+        "filename": "wada-tue-asthma-en.pdf",
+        "title": "TUE Physician Guidelines — Asthma",
+        "version": "current",
+        "language": "en",
+        "status": "guideline",
+        "url": "https://www.wada-ama.org/sites/default/files/2025-12/tue_physician_guidelines_asthma_-_version_9.3_january_2026.pdf",
+        "downloaded": "2026-06-16",
+        "sha256": "9dc98515b07a21cbded2bc181b103ee7585e8db608a9a96b84ec4afa2cbcc02d"
+      },
+      {
+        "filename": "wada-tue-adhd-en.pdf",
+        "title": "TUE Physician Guidelines — ADHD",
+        "version": "current",
+        "language": "en",
+        "status": "guideline",
+        "url": "https://www.wada-ama.org/sites/default/files/resources/files/tue_physician_guidelines_adhd_final_november_2021.pdf",
+        "downloaded": "2026-06-16",
+        "sha256": "648ae5fd535b4b153c8746271f32837876ef1f1570ef9051e79cb2970197d79f"
+      },
+      {
+        "filename": "wada-tue-glucocorticoids-en.pdf",
+        "title": "TUE Physician Guidelines — Glucocorticoids",
+        "version": "current",
+        "language": "en",
+        "status": "guideline",
+        "url": "https://www.wada-ama.org/sites/default/files/resources/files/glucocorticoids_and_therapeutic_use_exemptions_final_20oct21.pdf",
+        "downloaded": "2026-06-16",
+        "sha256": "fc85eda273ab4d9d813cd23be2dd35abea16aca6664cca760bd53ff8eec203d7"
+      }
+    ]
+  }
