@@ -2,3 +2,5 @@ qdrant_data/
 .env
 data/raw/*.pdf
 .DS_Store
+data/raw/_explore/
+notes

@@ -71,3 +71,38 @@ must carry a `version` (year) field in its Qdrant payload from day one, or
 retrieval will conflate years and return the wrong edition. I also forgo the
 redlines as a potential source of structured version-diff metadata, which
 could be reintroduced later as a stretch feature.
+
+======
+
+## 004 — Baseline ingestion & parsing approach (2026-06-17)
+
+**Decision:** For the weeks 1–2 baseline I'm parsing every document with flat
+`get_text()` extraction plus content-based cleanup (frequency-detected running
+headers + page-number removal), then fixed-size chunking. I'm deliberately not
+building coordinate-aware extraction for the Prohibited List yet, even though I
+can already see it needs it.
+
+**Reasoning:**
+- Reading the raw extraction, I found two very different document profiles. The
+  Code is single-column prose and its `Article 4.x` numbering survives
+  extraction cleanly, so I can eventually chunk it on article boundaries. The
+  Prohibited List is multi-column, and flat extraction pulls its section
+  headings out of order relative to the substance lists, so a substance can land
+  under the wrong class. I confirmed it on a real page: Tamoxifen — a SERM,
+  class S4.2 — comes out under the "S4.1 Aromatase Inhibitors" heading. If I
+  chunked that naively, my system would confidently answer that Tamoxifen is an
+  aromatase inhibitor, which is wrong.
+- I know the fix is coordinate-aware extraction (`get_text("blocks")`, sort by
+  position, bind each heading to the substances beneath it). I'm choosing not to
+  do it now, because I can't justify the change until I can measure it and I
+  don't have the eval harness yet. Fixing the parser before I can score it is
+  exactly the mistake this project is built to avoid.
+- I strip headers by how often a line repeats across pages rather than matching
+  a hardcoded title, so the cleaner generalizes to any WADA document. Page
+  numbers change every page, so frequency can't catch them — I remove those with
+  a separate digit filter. Two mechanisms, two jobs.
+
+**Tradeoff accepted:** My baseline knowingly carries garbage — displaced
+headings on the List, surviving sidebar labels, footnotes detached from their
+article. I've logged each as a hypothesis in EXPERIMENTS.md so I can fix them as
+measured experiments later and show the metric actually moved.
