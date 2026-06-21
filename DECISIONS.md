@@ -106,3 +106,38 @@ can already see it needs it.
 headings on the List, surviving sidebar labels, footnotes detached from their
 article. I've logged each as a hypothesis in EXPERIMENTS.md so I can fix them as
 measured experiments later and show the metric actually moved.
+
+---
+
+## 005 — Fixed-size token chunking (baseline) (2026-06-21)
+
+**Decision:** I turn the cleaned pages into fixed-size chunks of 512 tokens with
+64 tokens of overlap, tokenized with the embedding model's own encoding
+(`cl100k_base`, derived from the model name so it can't silently drift). Each
+chunk carries its `source`, `version`, page span, and a deterministic id
+(`{source}::{i}`). The `version` is read from the `sources.json` manifest, not
+parsed from the filename.
+
+**Reasoning:**
+- I size in tokens, not characters, because the embedding model has a token
+  budget and counts in tokens — so "512" means the same thing to me and to the
+  model. Using the model's exact encoding keeps that equivalence honest.
+- The 64-token overlap is insurance against a fixed window slicing an idea in
+  half: the cut idea still appears whole in the neighbouring chunk. I can put a
+  number on the cost — on the Code, overlap turned 143 chunks into 163 (~14%
+  more), i.e. ~14% more embedding spend.
+- I track each token's page of origin so a chunk records its true page span,
+  which I'll need for citations. A naive "join all pages then slice" throws that
+  mapping away; I also insert a separator between pages so words don't glue
+  across the boundary.
+- The manifest is the single source of truth for per-document metadata, so the
+  version is read there rather than re-derived from the filename.
+- Fixed chunking is deliberately the *baseline*. I can't justify structure-aware
+  chunking on `Article x.y.z` boundaries until the harness shows where fixed
+  chunking fails (logged as H3).
+
+**Tradeoff accepted:** Overlap inflates the chunk count and embedding cost by
+~14%. Fixed windows also cut articles mid-thought, and the chunker faithfully
+embeds whatever the parser hands it — including the List's displaced headings and
+table-of-contents noise. I keep these as measured experiments (H1, H3) rather
+than fixing them blind.

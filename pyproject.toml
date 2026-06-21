@@ -11,6 +11,7 @@ dependencies = [
     "pydantic-settings>=2.14.1",
     "pymupdf>=1.27.2.3",
     "qdrant-client>=1.18.0",
+    "tiktoken>=0.13.0",
     "uvicorn>=0.49.0",
 ]
 
@@ -20,5 +21,9 @@ dev = [
     "pytest>=9.0.3",
     "ruff>=0.15.17",
 ]
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
 [tool.ruff]
 line-length = 100
