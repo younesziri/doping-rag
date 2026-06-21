@@ -1,8 +1,9 @@
 qdrant_data/
+__pycache__/
 .env
 data/raw/*.pdf
 .DS_Store
 data/raw/_explore/
 notes
 CLAUDE.local.md
-CLAUDE.local.md
+
