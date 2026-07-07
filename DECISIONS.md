@@ -141,3 +141,88 @@ parsed from the filename.
 embeds whatever the parser hands it — including the List's displaced headings and
 table-of-contents noise. I keep these as measured experiments (H1, H3) rather
 than fixing them blind.
+
+---
+
+## 006 — Embedding, vector store, and top-k retrieval (baseline) (2026-07-03)
+
+**Decision:** I embed every chunk with OpenAI `text-embedding-3-small` (1536-dim),
+batching by the request token budget, and upsert one point per chunk into a
+single Qdrant collection `doping_chunks` (size 1536, cosine). Each point's
+payload carries `source`, `version`, `pages`, `text`, and the original
+`chunk_id`. Point ids are a deterministic `uuid5(namespace, chunk_id)`. Ingest
+upserts with `wait=True`. Retrieval embeds the query with the *same* function,
+runs a top-k `query_points`, and takes an optional `version` as a parameter that
+becomes a Qdrant payload filter. All of it is hand-written — no retrieval
+framework.
+
+**Reasoning:**
+- *One shared embedding function for ingest and query.* Documents and the query
+  must be embedded by the same model, or they live in different coordinate
+  systems and nearest-neighbour is meaningless. Keeping embedding in one module
+  enforces that symmetry structurally.
+- *Cosine + size 1536, derived from the model.* Text embeddings encode meaning in
+  direction and OpenAI's vectors are unit-normalised, so cosine is the natural
+  metric. The collection size is imported from the embedding module (`EMBED_DIM`),
+  so the store's geometry is coupled to the model — swapping models forces a
+  rebuild, which is correct.
+- *One collection + a `version` payload filter, not one collection per version.*
+  Payload filtering is the reason I chose Qdrant. One collection filtered on
+  `version` beats juggling many collections and stitching results, and it's the
+  mechanism the whole version-axis corpus was built for. The retriever takes
+  `version` as a parameter — it does not parse the query. Deriving the version
+  from natural language (regex or an LLM self-query) is a separate concern with
+  its own failure modes, gated behind the eval harness.
+- *Chunk text lives in the payload.* Embeddings are irreversible — I can't
+  recover text from a vector — so the point stores its text. The vector finds the
+  chunk; the payload text is what I feed the generator and cite. Inline payload
+  keeps retrieval to a single round-trip.
+- *Deterministic `uuid5` ids for idempotency.* Qdrant ids must be an unsigned int
+  or a UUID, but my `chunk_id` is a string. `uuid5(namespace, chunk_id)` hashes
+  it to a stable UUID, so re-ingesting overwrites in place instead of
+  duplicating. `uuid4` would duplicate the corpus on every run.
+- *`wait=True` on ingest* gives read-your-writes: the points are searchable the
+  moment the upsert returns, so an ingest-then-search script can't read an empty
+  store.
+
+**Verified:** 163 points in the collection (size 1536, cosine). OpenAI billed
+83,164 tokens vs my tiktoken estimate of ~83,130 — a 0.04% gap that confirms my
+chunker and the embedding model share the `cl100k_base` encoding. Re-ingesting
+with `recreate=False` kept the count at 163, so idempotency holds. Cost for the
+Code: ~$0.0017.
+
+**Tradeoff accepted:** At this scale Qdrant serves *exact* (brute-force) search —
+the HNSW / approximate-NN recall tradeoff only appears once the collection passes
+the indexing threshold (~20k vectors), so my baseline recall is effectively
+perfect and I haven't stress-tested ANN yet. Inline payload stores all chunk text
+inside Qdrant (fine now; on-disk payload or store-by-reference if RAM bites
+later). I stay on OpenAI embeddings for the baseline and keep a local model (BGE)
+as a measured weeks-5–6 experiment, since switching now would change the
+embedding dimension and force a rebuild before the harness can score it.
+
+
+## 007 — Generation provider: OpenAI gpt-4o-mini (code default), Mistral deferred (2026-07-07)
+
+**Decision:** I generate answers with OpenAI `gpt-4o-mini` and made it the code
+default, superseding the Mistral choice in 002. Mistral becomes a deferred,
+measured provider A/B.
+
+**Reasoning:** The provider sits behind a one-function `complete()` seam, so the
+specific choice is low-stakes
+
+---
+
+## 008 — Enforce abstention rather than always answer (2026-07-07)
+
+**Decision:** The system prompt instructs the model to refuse — to say the context
+doesn't contain the answer — when the retrieved chunks don't support one, instead
+of always producing an answer.
+
+**Reasoning:** High-stakes domain: a confident wrong answer about an athlete's
+eligibility can end a career, so an honest "I don't know" is safer than a
+fabricated answer grounded in nothing.
+
+**Tradeoff accepted:** I'll get false refusals — the model may abstain even when
+the answer was actually in the retrieved context which I accept over
+hallucination. Both the false-abstention rate and the hallucination rate will
+measured later in he harness.
