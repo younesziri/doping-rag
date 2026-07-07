@@ -18,9 +18,9 @@ class Settings(BaseSettings):
 
     # --- Models ---
     embedding_model: str = "text-embedding-3-small"
-    llm_model: str = "mistral-small-latest"
+    llm_model: str = "gpt-4o-mini"
 
-    # --- Chunking & retrieval (you'll tune these in weeks 5–6) ---
+    # --- Chunking & retrieval
     chunk_size: int = 512
     chunk_overlap: int = 64
     top_k: int = 5
