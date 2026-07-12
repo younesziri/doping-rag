@@ -1,21 +1,20 @@
-# Decision Log
+# My Decision Log
 
 Format: each entry records the decision, the reasoning, and the tradeoff accepted.
 
----
+
 
 ## 001 — English-only corpus (2026-06-12)
 
 **Decision:** Build the corpus and the entire pipeline (prompts, eval dataset,
-documentation) in English only.
+documentation) in English only (for now).
 
 **Reasoning:** The WADA ecosystem is English-first — the Code, the Prohibited
 List, TUE guidelines and CAS decisions all designate English as the
 authoritative version. Working in English removes multilingual embedding
-quality as a confounding variable in retrieval experiments, and the README
-and write-up target an English-speaking recruiter audience anyway.
+quality as a confounding variable in retrieval experiments.
 
-**Tradeoff accepted:** I lose the French drug-name → active-substance mapping
+**Tradeoff accepted:** I lose the French drug name → active-substance mapping
 subplot (e.g. "Ventoline" → salbutamol via the French public drug database).
 Could be reintroduced later as a stretch experiment with a multilingual
 embedding model.
@@ -33,13 +32,13 @@ embedding model.
 | LLM | Mistral API (mistral-small-latest) | Cheap, capable; OpenAI key kept as fallback |
 | PDF parsing | PyMuPDF | Fast and reliable baseline; will escalate to Docling only if tables prove problematic |
 | Lint/format | ruff + pre-commit | Quality gates installed before any code exists, so they never need retrofitting |
-| Tests | pytest | Standard; smoke test in place so CI starts green in week 7 |
+| Tests | pytest | Standard; smoke test in place so CI starts green later |
 
 **Deliberate non-choices:**
 - **No LangChain/LlamaIndex.** Retrieval logic is ~200 lines I want to
   understand and defend end-to-end. Frameworks would be evaluated for a
   production setting.
-- **No cloud deployment until week 7.** Local-first keeps iteration fast and
+- **No cloud deployment until near the end.** Local-first keeps iteration fast and
   free during the experimentation phase.
 
 

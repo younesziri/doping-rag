@@ -1,6 +1,6 @@
 """Answer a question: retrieve context, prompt the LLM, return a cited answer.
 
-This closes the weeks 1-2 baseline: question -> retrieve -> grounded, cited
+This closes the baseline: question -> retrieve -> grounded, cited
 answer (with abstention).
 
 GRIND provided for you: the Answer result type and the __main__ CLI.
