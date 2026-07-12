@@ -4,6 +4,7 @@ __pycache__/
 data/raw/*.pdf
 .DS_Store
 data/raw/_explore/
+data/eval/_*
 notes
 CLAUDE.local.md
 
