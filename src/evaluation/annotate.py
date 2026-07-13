@@ -103,7 +103,13 @@ def annotate_file(path: Path, k: int = 8, out: Path | None = None) -> Path:
                 )
             parts.append("")
             for rank, h in enumerate(hits, start=1):
-                parts.append(f"- **{rank}** ({h.score:.3f}) {' '.join(h.text.split())[:200]}…")
+                parts.append(
+                    f"**[{rank}] {h.score:.3f} — {h.source} v{h.version} "
+                    f"pages={h.pages} — `{h.chunk_id}`**\n"
+                )
+                parts.append("```text")
+                parts.append(h.text.strip())
+                parts.append("```")
         else:
             parts.append("_(no hits)_")
         parts.append("\n```json")
